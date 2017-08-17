@@ -258,11 +258,14 @@ export default class Graph extends View {
       .text(this._getLabel.bind(this))
 
     this._nodes.merge(this._enteredNodes)
-      .select('circle')
-      .attr('style', (key) => {
-        if (_.includes(items.tags, key)) return 'fill: #ff00ff'
-        if (_.includes(items.notes, key)) return 'fill: #00ff00'
-        return 'fill: rgb(215, 236, 251)'
+      .append('text')
+      .attr('class', 'icon')
+      .attr('x', -12)
+      .attr('y', 9)
+      .html((key) => {
+        if (_.includes(items.tags, key)) return '&#xF4FC;'
+        if (_.includes(items.notes, key)) return '&#xF39B;'
+        return ''
       })
   }
 
