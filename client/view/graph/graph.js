@@ -159,8 +159,8 @@ export default class Graph extends View {
       .selectAll(this.selectors.node)
       .data(this._items, d => d)
 
-    this._enterNodes()
-    this._updateNodes(items)
+    this._enterNodes(items)
+    this._updateNodes()
     this._exitNodes()
 
     this.layout.update(graph, this._enteredNodes.nodes())
@@ -234,7 +234,7 @@ export default class Graph extends View {
   /**
    * append new nodes to DOM
    */
-  _enterNodes () {
+  _enterNodes (items) {
     this._enteredNodes = this._nodes.enter().append('g')
     this._enteredNodes
       .classed(`${this.selectors.node.slice(1)} ${this.selectors.hidden.slice(1)}`, true)
@@ -247,17 +247,7 @@ export default class Graph extends View {
       .attr('x', this.p.node.size.width * 0.56)
       .attr('y', this.p.node.size.width * -0.19)
       .text(this._getLabel.bind(this))
-  }
-
-  /**
-   * update DOM nodes
-   */
-  _updateNodes (items) {
-    this._nodes
-      .select('text')
-      .text(this._getLabel.bind(this))
-
-    this._nodes.merge(this._enteredNodes)
+    this._enteredNodes
       .append('text')
       .attr('class', 'icon')
       .attr('x', -12)
@@ -267,6 +257,15 @@ export default class Graph extends View {
         if (_.includes(items.notes, key)) return '&#xF39B;'
         return ''
       })
+  }
+
+  /**
+   * update DOM nodes
+   */
+  _updateNodes (items) {
+    this._nodes
+      .select('text')
+      .text(this._getLabel.bind(this))
   }
 
   /**
