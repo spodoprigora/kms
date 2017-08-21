@@ -14,6 +14,7 @@ const _actions = [
   require('../action/select/none').default,
   require('../action/select/invert').default,
   require('../action/select/children').default,
+  require('../action/select/orphan').default,
   require('../action/item/create').default,
   require('../action/item/edit').default,
   require('../action/item/save').default,
@@ -58,9 +59,7 @@ export default class UI {
     this.linkedList.on('toogleSize', this._toogleViewsSize.bind(this))
 
     this.editor = new Editor(editorSet)
-    this.editor.on('hide', () => {
-      this.actionman.get('itemSave').apply()
-    })
+    this.editor.on('hide', () => { this.actionman.get('itemSave').apply() })
     this.editor.on('show', this._layoutViews.bind(this))
     this.editor.on('hide', this._layoutViews.bind(this))
     this.editor.on('toogleSize', this._toogleViewsSize.bind(this))
@@ -70,6 +69,7 @@ export default class UI {
       actions: this.actionman.getAll(),
     })
     this.actionman.on('add', this.actionsPanel.addMenuItem.bind(this.actionsPanel))
+
     this.menu = new Menu({ container: this.elements.header })
 
     this.actions = _actions
