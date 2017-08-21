@@ -53,7 +53,7 @@ class App {
       })
   }
 
-  createItem (p = {}) {
+  createItem (type) {
     const selected = this.selection.getAll()
     let updatesCounter = selected.length
     this.provider.request('set')
@@ -63,22 +63,31 @@ class App {
             this.provider.request('associate', key, relatedKey)
               .then((updated) => {
                 --updatesCounter
-                if (updatesCounter === 0) this.visibleItems.add(key)
+                if (updatesCounter === 0) {
+                  this._setItemType(type, key)
+                  this.visibleItems.add(key)
+                }
               })
           })
         } else {
+          this._setItemType(type, key)
           this.visibleItems.add(key)
           this.selection.add(key)
         }
-        if (p === 'tag') {
-          this.provider.request('associate', key, this.serviceItem.tag)
-          this.tagItems.add(key)
-        }
-        if (p === 'note') {
-          this.provider.request('associate', key, this.serviceItem.note)
-          this.noteItems.add(key)
-        }
       })
+  }
+
+  _setItemType (type, key) {
+    this.provider.request('associate', key, this.serviceItem[type])
+    switch (type) {
+    case 'tag':
+      this.tagItems.add(key)
+      break
+    case 'note':
+      this.noteItems.add(key)
+      break
+    default:
+    }
   }
 
   editItem (key) {
