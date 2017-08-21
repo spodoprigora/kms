@@ -15,6 +15,7 @@ const _actions = [
   require('../action/select/invert').default,
   require('../action/select/children').default,
   require('../action/select/orphan').default,
+  require('../action/select/leaves').default,
   require('../action/item/create').default,
   require('../action/item/edit').default,
   require('../action/item/save').default,
