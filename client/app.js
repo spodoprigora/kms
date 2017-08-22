@@ -143,14 +143,16 @@ class App {
 
       const tagKeys = await this.provider.request('getLinked', this.serviceItem.tag)
       const noteKeys = await this.provider.request('getLinked', this.serviceItem.note)
+
       this._filter(graph)
       this._filter(tagKeys)
       this._filter(noteKeys)
+      this._updateGraphView(graph, { tags: tagKeys, notes: noteKeys })
+
       const keys = graph.getItemKeys()
       this.visibleItems.add(keys)
       this.tagItems.add(tagKeys)
       this.noteItems.add(noteKeys)
-      this._updateGraphView(graph, { tags: tagKeys, notes: noteKeys })
 
       this.visibleItems.on('change', this._reloadGraph.bind(this))
       this.visibleItems.on('add', this._onVisibleItemsAdd.bind(this))

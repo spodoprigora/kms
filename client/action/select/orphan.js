@@ -7,15 +7,25 @@ export default class SelectOrphan extends Action {
     this._label = 'Orphan'
     this._icon = 'mdi mdi-adjust'
     this.group = 'select'
-    this._deny = false
+
+    this.registrar.visibleItems.on('change', this.evaluate.bind(this))
   }
 
   _execute () {
+    const orphans = this._getOrphan()
+    if (orphans.length > 0) this.registrar.selection.add(orphans)
+  }
+
+  _getOrphan () {
     const orphans = []
     let items = this.registrar.visibleItems.getAll()
     _.each(items, (item) => {
       if (this.registrar.visibleLinked(item).length === 0) orphans.push(item)
     })
-    this.registrar.selection.add(orphans)
+    return orphans
+  }
+
+  evaluate () {
+    super._evaluate(this._getOrphan().length > 0)
   }
 }
