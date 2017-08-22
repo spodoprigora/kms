@@ -12,17 +12,25 @@ export default class SelectLeaves extends Action {
   }
 
   _execute () {
+    const leaves = this._getLeaves()
+    this.registrar.selection.clear()
+    this.registrar.selection.add(leaves)
+  }
+
+  _getLeaves () {
     const leaves = []
-    const selected = this.registrar.selection.clear()[0]
+    const selected = this.registrar.selection.getAll()[0]
     const children = this.registrar.visibleLinked(selected)
     _.each(children, (child) => {
       const subchildren = this.registrar.visibleLinked(child)
       if (_.without(subchildren, selected).length === 0) leaves.push(child)
     })
-    this.registrar.selection.add(leaves)
+    return leaves
   }
 
   evaluate (selection) {
-    super._evaluate(selection.getCount() === 1)
+    if (selection.getCount() === 1) {
+      super._evaluate(this._getLeaves().length > 0)
+    }
   }
 }
